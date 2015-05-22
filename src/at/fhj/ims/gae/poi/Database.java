@@ -55,23 +55,7 @@ public class Database {
 
 		Query q = new Query("POI").setFilter(allFilters);
 		PreparedQuery pq = datastore.prepare(q);
-
-		List<POI> results = new ArrayList<>();
-		for (Entity result : pq.asIterable()) {
-			String category = (String) result.getProperty("category");
-			String creator = (String) result.getProperty("creator");
-			String description = (String) result.getProperty("description");
-			String lat = (String) result.getProperty("lat");
-			String lon = (String) result.getProperty("lon");
-			String name = (String) result.getProperty("name");
-			String key = Long.toString(result.getKey().getId());
-
-			POI poi = new POI(key, name, lat, lon, creator, description,
-					category);
-			results.add(poi);
-		}
-
-		return results;
+		return queryToList(pq);
 	}
 
 	public void delete(String id) {
@@ -118,6 +102,30 @@ public class Database {
 		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private List<POI> queryToList(PreparedQuery pq) {
+		List<POI> results = new ArrayList<>();
+		for (Entity result : pq.asIterable()) {
+			String category = (String) result.getProperty("category");
+			String creator = (String) result.getProperty("creator");
+			String description = (String) result.getProperty("description");
+			String lat = (String) result.getProperty("lat");
+			String lon = (String) result.getProperty("lon");
+			String name = (String) result.getProperty("name");
+			String key = Long.toString(result.getKey().getId());
+
+			POI poi = new POI(key, name, lat, lon, creator, description,
+					category);
+			results.add(poi);
+		}
+		return results;
+	}
+	
+	public List<POI> findAll() {
+		Query q = new Query("POI");
+		PreparedQuery pq = datastore.prepare(q);
+		return queryToList(pq);
 	}
 
 }
