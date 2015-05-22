@@ -71,5 +71,14 @@ public class Database {
 
 		return results;
 	}
+	
+	public void delete(String id) {
+		Query q = new Query("POI").setFilter(new FilterPredicate("POI",
+				FilterOperator.EQUAL, id));
+		PreparedQuery pq = datastore.prepare(q);
+		Entity result = pq.asSingleEntity();
+
+		datastore.delete(result.getKey());
+	}
 
 }
