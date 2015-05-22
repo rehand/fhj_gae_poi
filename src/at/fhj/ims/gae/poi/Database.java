@@ -36,16 +36,21 @@ public class Database {
 		return datastore.put(entity);
 	}
 
-	public List<POI> find(Map<String, String> filterProperties) {
+	public List<POI> find(Map<String, String[]> filterProperties) {
 		List<Filter> filters = new ArrayList<>();
 		for (String filterKey : filterProperties.keySet()) {
-			String filterItem = filterProperties.get(filterKey);
-			filters.add(new FilterPredicate(filterItem,
-					FilterOperator.LESS_THAN_OR_EQUAL, filterItem));
+			String[] filterItem = filterProperties.get(filterKey);
+			filters.add(new FilterPredicate(filterKey,
+					FilterOperator.LESS_THAN_OR_EQUAL, filterItem[0]));
 
 		}
 
-		CompositeFilter allFilters = CompositeFilterOperator.and(filters);
+		Filter allFilters;
+		if (filters.size() > 1) {
+			allFilters = CompositeFilterOperator.and(filters);
+		} else {
+			allFilters = filters.get(0);
+		}
 
 		Query q = new Query("POI").setFilter(allFilters);
 		PreparedQuery pq = datastore.prepare(q);
