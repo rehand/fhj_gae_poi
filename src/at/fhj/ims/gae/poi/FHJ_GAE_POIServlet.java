@@ -87,23 +87,25 @@ public class FHJ_GAE_POIServlet extends HttpServlet {
 		if (pathInfo != null && pathInfo.startsWith(PATH_POI)) {
 			Database db = new Database();
 			
-			int indexOf = pathInfo.lastIndexOf(SEP);
-			if (indexOf != 0 && indexOf != pathInfo.length() - 1) {
-				String idToUpdate = pathInfo.substring(indexOf);
+			ServletInputStream inputStream = req.getInputStream();
+			try (InputStreamReader in = new InputStreamReader(inputStream)) {
+				Gson gson = new Gson();
+				POI poi = gson.fromJson(in, POI.class);
 				
-				// TODO do update
-			} else {
-				ServletInputStream inputStream = req.getInputStream();
-				try (InputStreamReader in = new InputStreamReader(inputStream)) {
-					Gson gson = new Gson();
-					POI poi = gson.fromJson(in, POI.class);
+				int indexOf = pathInfo.lastIndexOf(SEP);
+				if (indexOf != 0 && indexOf != pathInfo.length() - 1) {
+					String idToUpdate = pathInfo.substring(indexOf);
 					
+					poi.setId(idToUpdate);
+					
+					// TODO do update
+					
+				} else {
 					Key id = db.insert(poi);
-					
 					poi.setId(Long.toString(id.getId()));
-					
-					sendJSONResponse(poi, resp);
 				}
+				
+				sendJSONResponse(poi, resp);
 			}
 			
 		} else {
