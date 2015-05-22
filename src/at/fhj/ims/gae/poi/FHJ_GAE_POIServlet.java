@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 
@@ -82,9 +83,19 @@ public class FHJ_GAE_POIServlet extends HttpServlet {
 				
 				String idToUpdate = getIdFromPathInfo(pathInfo);
 				if (idToUpdate != null && idToUpdate.length() > 0) {
-					poi.setCreator(UserServiceFactory.getUserService().getCurrentUser().getEmail());
 					poi.setId(idToUpdate);
-					db.update(poi);
+					
+					String email = null;
+					User currentUser = UserServiceFactory.getUserService().getCurrentUser();
+					if (currentUser != null) {
+						email = currentUser.getEmail();
+					}
+					
+					if (email != null && email.equals(poi.getCreator())) {
+						db.update(poi);
+					} else {
+						show401(resp);
+					}
 				} else {
 					poi.setCreator(UserServiceFactory.getUserService().getCurrentUser().getEmail());
 					Key id = db.insert(poi);
@@ -116,7 +127,19 @@ public class FHJ_GAE_POIServlet extends HttpServlet {
 		String idToDelete = getIdFromPathInfo(req.getPathInfo());
 		if (idToDelete != null && idToDelete.length() > 0) {
 			Database db = new Database();
-			db.delete(idToDelete);
+			
+			String email = null;
+			User currentUser = UserServiceFactory.getUserService().getCurrentUser();
+			if (currentUser != null) {
+				email = currentUser.getEmail();
+			}
+			
+			POI entity = db.findById(idToDelete);
+			if (entity != null && email != null && email.equals(entity.getCreator())) {
+				db.delete(idToDelete);
+			} else {
+				show401(resp);
+			}
 		} else {
 			show501(resp);
 		}
@@ -128,6 +151,12 @@ public class FHJ_GAE_POIServlet extends HttpServlet {
 		
 		resp.setContentType("application/json");
 		resp.getWriter().write(poisJson);
+	}
+	
+	private void show401(HttpServletResponse resp) throws IOException {
+		resp.setContentType("text/plain");
+		resp.setStatus(401);
+		resp.getWriter().println("Not allowed");
 	}
 
 	private void show404(HttpServletResponse resp) throws IOException {
