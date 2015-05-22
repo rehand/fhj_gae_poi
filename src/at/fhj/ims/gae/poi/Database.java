@@ -25,7 +25,7 @@ public class Database {
 	}
 
 	public Key insert(POI poi) {
-		Entity entity = new Entity("POI", poi.getId());
+		Entity entity = new Entity("POI");
 		entity.setProperty("category", poi.getCategory());
 		entity.setProperty("creator", poi.getCreator());
 		entity.setProperty("description", poi.getDescription());
