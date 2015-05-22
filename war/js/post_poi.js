@@ -9,5 +9,6 @@ function postPoi() {
 	
 	$.post("/resources/poi", newPoi, function(response) {
 		console.log(response);
+		window.location = "/";
 	}, 'json');
 }

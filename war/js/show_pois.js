@@ -15,6 +15,4 @@ function showPois(data) {
 	$("<ul/>", {
 		html : items.join("")
 	}).appendTo("#poisList");
-	
-	window.location = "/";
 }
