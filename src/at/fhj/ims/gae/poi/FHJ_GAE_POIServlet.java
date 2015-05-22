@@ -120,6 +120,19 @@ public class FHJ_GAE_POIServlet extends HttpServlet {
 		return null;
 	}
 	
+	@Override
+	protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		
+		String idToDelete = getIdFromPathInfo(req.getPathInfo());
+		if (idToDelete != null && idToDelete.length() > 0) {
+			Database db = new Database();
+			db.delete(idToDelete);
+		} else {
+			show501(resp);
+		}
+	}
+	
 	private void sendJSONResponse(Object pois, HttpServletResponse resp) throws IOException {
 		Gson gson = new Gson();
 		String poisJson = gson.toJson(pois);
