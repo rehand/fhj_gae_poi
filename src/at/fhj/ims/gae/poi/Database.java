@@ -19,6 +19,7 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 public class Database {
 
+	private static final String KIND = "POI";
 	private DatastoreService datastore;
 
 	public Database() {
@@ -26,7 +27,7 @@ public class Database {
 	}
 
 	public Key insert(POI poi) {
-		Entity entity = new Entity("POI");
+		Entity entity = new Entity(KIND);
 		entity.setProperty("category", poi.getCategory());
 		entity.setProperty("creator", poi.getCreator());
 		entity.setProperty("description", poi.getDescription());
@@ -53,13 +54,13 @@ public class Database {
 			allFilters = filters.get(0);
 		}
 
-		Query q = new Query("POI").setFilter(allFilters);
+		Query q = new Query(KIND).setFilter(allFilters);
 		PreparedQuery pq = datastore.prepare(q);
 		return queryToList(pq);
 	}
 
 	public void delete(String id) {
-		Key key = KeyFactory.createKey("POI", Long.parseLong(id));
+		Key key = KeyFactory.createKey(KIND, Long.parseLong(id));
 		datastore.delete(key);
 	}
 
@@ -83,7 +84,7 @@ public class Database {
 	}
 
 	private Entity findEntityById(String id) throws EntityNotFoundException {
-		Key key = KeyFactory.createKey("POI", Long.parseLong(id));
+		Key key = KeyFactory.createKey(KIND, Long.parseLong(id));
 		return datastore.get(key);
 	}
 
@@ -123,7 +124,7 @@ public class Database {
 	}
 	
 	public List<POI> findAll() {
-		Query q = new Query("POI");
+		Query q = new Query(KIND);
 		PreparedQuery pq = datastore.prepare(q);
 		return queryToList(pq);
 	}
