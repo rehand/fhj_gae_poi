@@ -31,26 +31,20 @@ public class FHJ_GAE_POIServlet extends HttpServlet {
 		if (pathInfo != null && pathInfo.startsWith(PATH_POI)) {
 			Database db = new Database();
 			
-			// FIXME remove the following line
-			POI testPOI = new POI("testId", "name", "123.45", "456.78", "Sepp", "Blabla", "nix");
-			
 			String queryString = req.getQueryString();
 			LOG.info("queryString " + queryString);
 			LOG.info("pathInfo " + pathInfo);
 			
 			String idToFind = getIdFromPathInfo(pathInfo);
 			if (idToFind != null && idToFind.length() > 0) {
-				// TODO get specific POI
-				POI foundPoi = testPOI;
-				
+				POI foundPoi = db.findById(idToFind);
 				if (foundPoi != null) {
-					sendJSONResponse(testPOI, resp);
+					sendJSONResponse(foundPoi, resp);
 				} else {
 					show404(resp);
 				}
 			} else if (queryString != null && queryString.length() > 0) {
-				// TODO create filter(s)
-				
+				@SuppressWarnings("unchecked")
 				Map<String, String[]> queryStrings = req.getParameterMap();
 				LOG.info("query strings: " + queryStrings);
 				
@@ -61,12 +55,7 @@ public class FHJ_GAE_POIServlet extends HttpServlet {
 					show404(resp);
 				}
 			} else {
-				// FIXME remove the following lines
-				List<POI> pois = new ArrayList<>();
-				pois.add(testPOI);
-				
-				// TODO get all POIs
-				
+				List<POI> pois = db.findAll();
 				if (pois != null && pois.size() > 0) {
 					sendJSONResponse(pois, resp);
 				} else {
@@ -94,10 +83,9 @@ public class FHJ_GAE_POIServlet extends HttpServlet {
 				
 				String idToUpdate = getIdFromPathInfo(pathInfo);
 				if (idToUpdate != null && idToUpdate.length() > 0) {
+					poi.setCreator(UserServiceFactory.getUserService().getCurrentUser().getEmail());
 					poi.setId(idToUpdate);
-					
-					// TODO do update
-					
+					db.update(poi);
 				} else {
 					poi.setCreator(UserServiceFactory.getUserService().getCurrentUser().getEmail());
 					Key id = db.insert(poi);
