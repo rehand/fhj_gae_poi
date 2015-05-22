@@ -7,7 +7,9 @@ import java.util.Map;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
@@ -62,7 +64,7 @@ public class Database {
 			String lat = (String) result.getProperty("lat");
 			String lon = (String) result.getProperty("lon");
 			String name = (String) result.getProperty("name");
-			String key = result.getKey().getName();
+			String key = Long.toString(result.getKey().getId());
 
 			POI poi = new POI(key, name, lat, lon, creator, description,
 					category);
@@ -73,12 +75,8 @@ public class Database {
 	}
 	
 	public void delete(String id) {
-		Query q = new Query("POI").setFilter(new FilterPredicate("POI",
-				FilterOperator.EQUAL, id));
-		PreparedQuery pq = datastore.prepare(q);
-		Entity result = pq.asSingleEntity();
-
-		datastore.delete(result.getKey());
+		Key key = KeyFactory.createKey("POI", Long.parseLong(id));
+		datastore.delete(key);
 	}
 
 }
