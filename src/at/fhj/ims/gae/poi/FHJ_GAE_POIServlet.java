@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 
 @SuppressWarnings("serial")
@@ -98,6 +99,7 @@ public class FHJ_GAE_POIServlet extends HttpServlet {
 					// TODO do update
 					
 				} else {
+					poi.setCreator(UserServiceFactory.getUserService().getCurrentUser().getEmail());
 					Key id = db.insert(poi);
 					poi.setId(Long.toString(id.getId()));
 				}
