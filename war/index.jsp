@@ -14,12 +14,21 @@
     <script src="js/jquery-2.1.4.js"></script>
     <script src="js/show_pois.js"></script>
     <script src="js/post_poi.js"></script>
+    <script src="js/search_poi.js"></script>
 </head>
 
 <body>
 
 <h1>Point of Interest</h1>
 <h5>Team Antes-Klobucar-Handler-Hoelbling</h5>
+
+<h2>Search POI</h2>
+<input type="text" name="name" id="searchName">
+<br>
+<button type="button" id="searchPoi">Search</button>
+<section id="poisSearchResults">
+</section>
+
 
 <h2>Vorhandene POIs</h2>
 <section id="poisList">

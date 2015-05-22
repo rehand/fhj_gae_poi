@@ -9,18 +9,27 @@
 
 <!DOCTYPE html>
 <html>
+
+<%
+    UserService userService = UserServiceFactory.getUserService();
+    User user = userService.getCurrentUser();
+    String userEmail = "";
+    if (user != null) {
+    	userEmail = user.getEmail();
+    }
+%>
+
 <head>
     <link type="text/css" rel="stylesheet" href="/css/main.css"/>
     <script src="js/jquery-2.1.4.js"></script>
+    <script src="js/delete_poi.js"></script>
     <script src="js/show_single_poi.js"></script>
+    <script type="text/javascript">
+    var userEmail = '<%= userEmail %>';
+    </script>
 </head>
 
 <body>
-
-<% 
-String poiId = request.getParameter("id"); 
-pageContext.setAttribute("poiId", poiId);
-%>
 
 <h1>Point of Interest</h1>
 <h5>Team Antes-Klobucar-Handler-Hoelbling</h5>

@@ -13,7 +13,8 @@ function showPois(data) {
 	});
 
 	$("<ul/>", {
-		"class" : "my-new-list",
 		html : items.join("")
 	}).appendTo("#poisList");
+	
+	window.location = "/";
 }

@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	var poiId = getParameterByName("id");
+	poiId = getParameterByName("id");
 	
 	console.log("Try to get POI for ID " + poiId);
 	
@@ -15,6 +15,12 @@ function showPoi(data) {
 	$("#poiContent").append("<p><strong>Description:</strong> " + data.description + "</p>");
 	$("#poiContent").append("<p><strong>Latitude:</strong> " + data.lat + "</p>");
 	$("#poiContent").append("<p><strong>Longitude:</strong> " + data.lon + "</p>");
+	
+	if(data.creator === userEmail) {
+		$("#poiContent").append("<br><button type='button' id='deletePoi'>Delete POI</button>");
+		
+		$("#deletePoi").click(deletePoi);
+	}
 }
 
 function getParameterByName(name) {
