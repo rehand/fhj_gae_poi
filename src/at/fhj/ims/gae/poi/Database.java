@@ -73,10 +73,51 @@ public class Database {
 
 		return results;
 	}
-	
+
 	public void delete(String id) {
 		Key key = KeyFactory.createKey("POI", Long.parseLong(id));
 		datastore.delete(key);
+	}
+
+	public POI findById(String id) {
+		try {
+			Entity entity = findEntityById(id);
+			String category = (String) entity.getProperty("category");
+			String creator = (String) entity.getProperty("creator");
+			String description = (String) entity.getProperty("description");
+			String lat = (String) entity.getProperty("lat");
+			String lon = (String) entity.getProperty("lon");
+			String name = (String) entity.getProperty("name");
+			String storedId = Long.toString(entity.getKey().getId());
+
+			return new POI(storedId, name, lat, lon, creator, description,
+					category);
+		} catch (EntityNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	private Entity findEntityById(String id) throws EntityNotFoundException {
+		Key key = KeyFactory.createKey("POI", Long.parseLong(id));
+		return datastore.get(key);
+	}
+
+	public void update(POI poi) {
+		try {
+			Entity entity = findEntityById(poi.getId());
+
+			entity.setProperty("category", poi.getCategory());
+			entity.setProperty("creator", poi.getCreator());
+			entity.setProperty("description", poi.getDescription());
+			entity.setProperty("lat", poi.getLat());
+			entity.setProperty("lon", poi.getLon());
+			entity.setProperty("name", poi.getName());
+
+			datastore.put(entity);
+		} catch (EntityNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
