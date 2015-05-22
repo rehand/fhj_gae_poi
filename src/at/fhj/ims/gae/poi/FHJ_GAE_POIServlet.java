@@ -22,6 +22,7 @@ public class FHJ_GAE_POIServlet extends HttpServlet {
 	private static final String PATH_POI = "/poi";
 	private static final Logger LOG = Logger.getLogger(FHJ_GAE_POIServlet.class.getSimpleName());
 	
+	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 		String pathInfo = req.getPathInfo();
@@ -36,10 +37,8 @@ public class FHJ_GAE_POIServlet extends HttpServlet {
 			LOG.info("queryString " + queryString);
 			LOG.info("pathInfo " + pathInfo);
 			
-			int indexOf = pathInfo.lastIndexOf(SEP);
-			if (indexOf != 0 && indexOf != pathInfo.length() - 1) {
-				String idToFind = pathInfo.substring(indexOf);
-				
+			String idToFind = getIdFromPathInfo(pathInfo);
+			if (idToFind != null && idToFind.length() > 0) {
 				// TODO get specific POI
 				POI foundPoi = testPOI;
 				
@@ -92,10 +91,8 @@ public class FHJ_GAE_POIServlet extends HttpServlet {
 				Gson gson = new Gson();
 				POI poi = gson.fromJson(in, POI.class);
 				
-				int indexOf = pathInfo.lastIndexOf(SEP);
-				if (indexOf != 0 && indexOf != pathInfo.length() - 1) {
-					String idToUpdate = pathInfo.substring(indexOf);
-					
+				String idToUpdate = getIdFromPathInfo(pathInfo);
+				if (idToUpdate != null && idToUpdate.length() > 0) {
 					poi.setId(idToUpdate);
 					
 					// TODO do update
@@ -111,6 +108,16 @@ public class FHJ_GAE_POIServlet extends HttpServlet {
 		} else {
 			show501(resp);
 		}
+	}
+	
+	private String getIdFromPathInfo(String pathInfo) {
+		if (pathInfo != null) {
+			int indexOf = pathInfo.lastIndexOf(SEP);
+			if (indexOf != 0 && indexOf != pathInfo.length() - 1) {
+				return pathInfo.substring(indexOf + 1);
+			}
+		}
+		return null;
 	}
 	
 	private void sendJSONResponse(Object pois, HttpServletResponse resp) throws IOException {
