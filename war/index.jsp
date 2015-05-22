@@ -11,6 +11,8 @@
 <html>
 <head>
     <link type="text/css" rel="stylesheet" href="/css/main.css"/>
+    <script src="js/jquery-2.1.4.js"></script>
+    <script src="js/show_pois.js"></script>
     <script src="js/post_poi.js"></script>
 </head>
 
@@ -20,9 +22,11 @@
 <h5>Team Antes-Klobucar-Handler-Hoelbling</h5>
 
 <h2>Vorhandene POIs</h2>
-<p>...</p>
+<section id="poisList">
+</section>
 
 <h2>Neuen POI anlegen</h2>
+
 <%
     UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
@@ -31,8 +35,7 @@
 %>
 
 <p>
-
-	<form>
+	<form id="newPoiForm">
 	Name:<br>
 	<input type="text" name="name">
 	<br>
@@ -48,7 +51,7 @@
 	Category:<br>
 	<input type="text" name="category">
 	<br>
-	<button type="button">Send</button>
+	<button type="button" id="sendPoi">Send</button>
 	</form>
     <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">Logout</a></p>
 <%
