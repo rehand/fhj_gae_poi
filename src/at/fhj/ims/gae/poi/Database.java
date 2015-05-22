@@ -10,7 +10,6 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.CompositeFilter;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
@@ -25,7 +24,7 @@ public class Database {
 	}
 
 	public Key insert(POI poi) {
-		Entity entity = new Entity("POI", poi.getId());
+		Entity entity = new Entity("POI");
 		entity.setProperty("category", poi.getCategory());
 		entity.setProperty("creator", poi.getCreator());
 		entity.setProperty("description", poi.getDescription());
@@ -71,6 +70,15 @@ public class Database {
 		}
 
 		return results;
+	}
+	
+	public void delete(String id) {
+		Query q = new Query("POI").setFilter(new FilterPredicate("POI",
+				FilterOperator.EQUAL, id));
+		PreparedQuery pq = datastore.prepare(q);
+		Entity result = pq.asSingleEntity();
+
+		datastore.delete(result.getKey());
 	}
 
 }

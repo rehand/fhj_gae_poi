@@ -7,6 +7,9 @@ public class POI {
 	private String creator;
 	private String description;
 	private String category;
+	
+	public POI() {
+	}
 
 	public POI(String id, String name, String lat, String lon, String creator,
 			String description, String category) {
