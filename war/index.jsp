@@ -49,10 +49,10 @@
 	<input type="text" name="name">
 	<br>
 	Latitude:<br>
-	<input type="text" name="latitude">
+	<input type="number" step="any" min="-90" max="90" name="lat">
 	<br>
 	Longitude:<br>
-	<input type="text" name="longitude">
+	<input type="number" step="any" min="-180" max="180" name="lon">
 	<br>
 	Description:<br>
 	<input type="text" name="description">
