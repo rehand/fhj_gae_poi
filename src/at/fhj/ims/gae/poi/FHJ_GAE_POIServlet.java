@@ -91,7 +91,11 @@ public class FHJ_GAE_POIServlet extends HttpServlet {
 						email = currentUser.getEmail();
 					}
 					
-					if (email != null && email.equals(poi.getCreator())) {
+					POI poiInDb = db.findById(idToUpdate);
+					if (poiInDb == null) {
+						show404(resp);
+					}else if (email != null && email.equals(poiInDb.getCreator())) {
+						poi.setCreator(email);
 						db.update(poi);
 					} else {
 						show401(resp);

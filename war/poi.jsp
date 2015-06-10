@@ -23,7 +23,8 @@
     <link type="text/css" rel="stylesheet" href="/css/main.css"/>
     <script src="js/jquery-2.1.4.js"></script>
     <script src="js/delete_poi.js"></script>
-    <script src="js/show_single_poi.js"></script>
+    <script src="js/update_poi.js"></script>
+    <script src="js/show_single_poi.js" defer></script>
     <script type="text/javascript">
     var userEmail = '<%= userEmail %>';
     </script>
